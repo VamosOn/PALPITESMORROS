@@ -1,149 +1,86 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Palpites Morros</title>
-<style>
-  body {
-    background: #000;
-    color: #00aaff;
-    font-family: Arial, sans-serif;
-    margin: 0; padding: 0 20px;
-  }
-  header {
-    text-align: center;
-    padding: 20px 0;
-    border-bottom: 3px solid #00aaff;
-    font-size: 2rem;
-    font-weight: bold;
-  }
-  .palpite-item {
-    background: #111;
-    margin: 10px 0;
-    padding: 10px;
-    border-radius: 6px;
-    border: 1px solid #00aaff;
-  }
-  #vip-area {
-    margin-top: 30px;
-    border-top: 3px solid #00aaff;
-    padding-top: 20px;
-  }
-  #vip-login, #vip-palpite-list {
-    max-width: 400px;
-    margin: 0 auto;
-  }
-  input[type="password"] {
-    padding: 8px;
-    width: 70%;
-    border: 1px solid #00aaff;
-    border-radius: 4px;
-    background: #222;
-    color: #00aaff;
-  }
-  button {
-    background: #00aaff;
-    color: #000;
-    border: none;
-    padding: 9px 15px;
-    margin-left: 10px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  button:hover {
-    background: #0088cc;
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Palpites Morros - Principal</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #00aaff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #001f3f;
+      padding: 20px;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+    }
+    nav {
+      text-align: center;
+      margin: 10px;
+    }
+    nav a {
+      color: #00aaff;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+    }
+    .palpite {
+      background-color: #111;
+      padding: 10px;
+      border-radius: 8px;
+      margin: 10px 0;
+    }
+  </style>
 </head>
 <body>
 
-<header>Palpites Morros</header>
+  <header>
+    <h1>Palpites Morros</h1>
+  </header>
 
-<section id="palpites-publicos">
-  <h2>Palpites Públicos</h2>
-  <div id="publico-list"></div>
-</section>
+  <nav>
+    <a href="vip.html">Área VIP</a>
+    <a href="admin.html">Administração</a>
+  </nav>
 
-<section id="vip-area">
-  <h2>Área VIP</h2>
-  <div id="vip-login">
-    <p>Digite a senha para acessar os palpites VIP:</p>
-    <input type="password" id="senha-vip" placeholder="Senha VIP" />
-    <button id="btn-vip-entrar">Entrar</button>
-    <p id="vip-msg" style="color:#faa; margin-top:8px;"></p>
+  <div class="container">
+    <h2>Palpites Públicos</h2>
+    <div id="listaPalpites"></div>
   </div>
-  <div id="vip-palpite-list" style="display:none;"></div>
-</section>
 
-<script>
-  // Funções para pegar palpites do localStorage
-  function pegarPalpitesPublicos() {
-    const dados = localStorage.getItem('palpitesMorrosPublicos');
-    return dados ? JSON.parse(dados) : [];
-  }
-  function pegarPalpitesVIP() {
-    const dados = localStorage.getItem('palpitesMorrosVIP');
-    return dados ? JSON.parse(dados) : [];
-  }
+  <script>
+    function carregarPalpites() {
+      const lista = document.getElementById('listaPalpites');
+      lista.innerHTML = '';
+      let palpites = JSON.parse(localStorage.getItem('palpites')) || [];
 
-  // Mostrar palpites públicos
-  function mostrarPalpitesPublicos() {
-    const publicoList = document.getElementById('publico-list');
-    const palpites = pegarPalpitesPublicos();
-    publicoList.innerHTML = '';
-    if(palpites.length === 0) {
-      publicoList.innerHTML = '<p>Nenhum palpite público disponível.</p>';
-      return;
+      const palpitesPublicos = palpites.filter(p => p.tipo === 'publico');
+
+      palpitesPublicos.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'palpite';
+        div.innerHTML = `
+          <strong>Jogo:</strong> ${item.jogo} <br>
+          <strong>Vitória:</strong> ${item.vitoria} <br>
+          <strong>Gols:</strong> ${item.gols} <br>
+          <strong>Escanteios:</strong> ${item.escanteios}
+        `;
+        lista.appendChild(div);
+      });
     }
-    palpites.forEach(p => {
-      const div = document.createElement('div');
-      div.className = 'palpite-item';
-      div.innerHTML = `
-        <strong>${p.jogo}</strong><br/>
-        Gols: ${p.gols} | Escanteios: ${p.escanteios} | Vitória: ${p.vitoria} | Resultado exato: ${p.resultado}
-      `;
-      publicoList.appendChild(div);
-    });
-  }
 
-  // Mostrar área VIP com palpites VIP
-  function mostrarVipArea() {
-    document.getElementById('vip-login').style.display = 'none';
-    const vipPalpiteListDiv = document.getElementById('vip-palpite-list');
-    vipPalpiteListDiv.style.display = 'block';
-    vipPalpiteListDiv.innerHTML = '';
-
-    const palpitesVIP = pegarPalpitesVIP();
-    if(palpitesVIP.length === 0) {
-      vipPalpiteListDiv.innerHTML = '<p>Nenhum palpite VIP disponível.</p>';
-      return;
-    }
-    palpitesVIP.forEach(p => {
-      const div = document.createElement('div');
-      div.className = 'palpite-item';
-      div.innerHTML = `
-        <strong>${p.jogo}</strong><br/>
-        Gols: ${p.gols} | Escanteios: ${p.escanteios} | Vitória: ${p.vitoria} | Resultado exato: ${p.resultado}
-      `;
-      vipPalpiteListDiv.appendChild(div);
-    });
-  }
-
-  document.getElementById('btn-vip-entrar').addEventListener('click', () => {
-    const senhaInput = document.getElementById('senha-vip').value;
-    const msg = document.getElementById('vip-msg');
-    if(senhaInput === 'Morros321') {
-      mostrarVipArea();
-      msg.textContent = '';
-    } else {
-      msg.textContent = 'Senha incorreta.';
-    }
-  });
-
-  // Inicializa página
-  mostrarPalpitesPublicos();
-</script>
+    carregarPalpites();
+  </script>
 
 </body>
 </html>
