@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Administração - Palpites Morros</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header>
+    <h1>Palpites Morros - Administração</h1>
+  </header>
+
+  <main class="admin-container">
+    <section id="login-section">
+      <h2>Login do Administrador</h2>
+      <form id="admin-login-form">
+        <input type="password" id="admin-password" placeholder="Digite a senha do administrador" required />
+        <button type="submit">Entrar</button>
+      </form>
+      <p id="admin-error" class="error-msg"></p>
+    </section>
+
+    <section id="panel-section" style="display:none;">
+      <h2>Cadastro de Palpites</h2>
+
+      <form id="palpite-form">
+        <label>
+          Jogo:<br />
+          <input type="text" id="jogo" placeholder="Ex: Bétis x Valencia" required />
+        </label>
+
+        <label>
+          Gols:<br />
+          <input type="text" id="gols" placeholder="Ex: 2-1" required />
+        </label>
+
+        <label>
+          Escanteios:<br />
+          <input type="text" id="escanteios" placeholder="Ex: 7-5" required />
+        </label>
+
+        <label>
+          Vitória:<br />
+          <input type="text" id="vitoria" placeholder="Ex: Bétis" required />
+        </label>
+
+        <label>
+          Resultado exato:<br />
+          <input type="text" id="resultado" placeholder="Ex: 2-1" required />
+        </label>
+
+        <button type="submit">Adicionar Palpite</button>
+      </form>
+
+      <h3>Palpites Cadastrados</h3>
+      <ul id="palpites-list"></ul>
+
+      <h3>Código HTML gerado</h3>
+      <textarea id="generated-code" rows="10" readonly></textarea>
+    </section>
+  </main>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
