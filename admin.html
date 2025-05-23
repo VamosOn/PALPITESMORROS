@@ -1,135 +1,67 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Administrador - Palpites Morros</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Administração Palpites Morros</title>
 <style>
-body {
-  background-color: #000;
-  color: #fff;
-  font-family: Arial, sans-serif;
-}
-header {
-  background-color: #001f3f;
-  padding: 10px;
-  text-align: center;
-}
-header h1 {
-  margin: 0;
-  color: #00aaff;
-}
-.container {
-  max-width: 800px;
-  margin: auto;
-  padding: 20px;
-}
-input, select {
-  padding: 10px;
-  margin: 5px;
-}
-button {
-  padding: 10px 20px;
-  background-color: #00aaff;
-  border: none;
-  color: white;
-  cursor: pointer;
-  margin: 5px;
-}
-.palpite {
-  background-color: #111;
-  border: 2px solid #00aaff;
-  border-radius: 12px;
-  padding: 15px;
-  margin: 15px 0;
-  box-shadow: 0 0 10px rgba(0, 170, 255, 0.4);
-}
+  body {
+    font-family: Arial, sans-serif;
+    background: black;
+    color: white;
+    padding: 20px;
+  }
+  textarea {
+    width: 100%;
+    height: 400px;
+    background: #111;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: monospace;
+    font-size: 14px;
+    padding: 10px;
+  }
+  button {
+    background: #0066ff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+  }
 </style>
 </head>
 <body>
 
-<header>
-  <h1>Administrador - Palpites Morros</h1>
-</header>
+<h1>Administração Palpites Morros</h1>
+<p>Edite os palpites no formato JSON abaixo e copie para atualizar o arquivo <code>palpites.json</code> no seu repositório GitHub.</p>
 
-<div class="container" id="login">
-  <p>Digite a senha para acessar:</p>
-  <input type="password" id="senha">
-  <button onclick="entrar()">Entrar</button>
-</div>
+<textarea id="jsonPalpites">[
+  {
+    "jogo": "Betis x Valencia",
+    "gols": "2-1",
+    "escanteios": "8",
+    "vitoria": "Betis",
+    "tipo": "publico"
+  }
+]</textarea>
 
-<div class="container" id="conteudo" style="display:none;">
-  <h2>Adicionar Palpite</h2>
-  <input type="text" id="jogo" placeholder="Jogo">
-  <input type="text" id="vitoria" placeholder="Vitória">
-  <input type="text" id="gols" placeholder="Gols">
-  <input type="text" id="escanteios" placeholder="Escanteios">
-  <select id="tipo">
-    <option value="publico">Público</option>
-    <option value="vip">VIP</option>
-  </select>
-  <button onclick="adicionarPalpite()">Adicionar</button>
-
-  <h2>Palpites Atuais</h2>
-  <div id="lista"></div>
-</div>
+<button onclick="validarJson()">Validar e Copiar JSON</button>
 
 <script>
-function entrar() {
-  const senha = document.getElementById('senha').value;
-  if(senha === 'Morros123') {
-    document.getElementById('login').style.display = 'none';
-    document.getElementById('conteudo').style.display = 'block';
-    listar();
-  } else {
-    alert('Senha incorreta!');
+  function validarJson() {
+    const texto = document.getElementById('jsonPalpites').value;
+    try {
+      JSON.parse(texto);
+      alert('JSON válido! Copie o texto para atualizar o arquivo palpites.json no GitHub.');
+      navigator.clipboard.writeText(texto);
+    } catch (e) {
+      alert('JSON inválido: ' + e.message);
+    }
   }
-}
-
-function adicionarPalpite() {
-  const jogo = document.getElementById('jogo').value;
-  const vitoria = document.getElementById('vitoria').value;
-  const gols = document.getElementById('gols').value;
-  const escanteios = document.getElementById('escanteios').value;
-  const tipo = document.getElementById('tipo').value;
-
-  const palpites = JSON.parse(localStorage.getItem('palpites') || '[]');
-  palpites.push({jogo, vitoria, gols, escanteios, tipo});
-  localStorage.setItem('palpites', JSON.stringify(palpites));
-
-  listar();
-
-  document.getElementById('jogo').value = '';
-  document.getElementById('vitoria').value = '';
-  document.getElementById('gols').value = '';
-  document.getElementById('escanteios').value = '';
-}
-
-function listar() {
-  const palpites = JSON.parse(localStorage.getItem('palpites') || '[]');
-  const lista = document.getElementById('lista');
-  lista.innerHTML = '';
-  palpites.forEach((p, index) => {
-    const div = document.createElement('div');
-    div.className = 'palpite';
-    div.innerHTML = `
-      <p><strong>Jogo:</strong> ${p.jogo}</p>
-      <p><strong>Vitória:</strong> ${p.vitoria}</p>
-      <p><strong>Gols:</strong> ${p.gols}</p>
-      <p><strong>Escanteios:</strong> ${p.escanteios}</p>
-      <p><strong>Tipo:</strong> ${p.tipo}</p>
-      <button onclick="remover(${index})">Remover</button>
-    `;
-    lista.appendChild(div);
-  });
-}
-
-function remover(index) {
-  const palpites = JSON.parse(localStorage.getItem('palpites') || '[]');
-  palpites.splice(index, 1);
-  localStorage.setItem('palpites', JSON.stringify(palpites));
-  listar();
-}
 </script>
 
 </body>
