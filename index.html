@@ -1,48 +1,32 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Palpites Morros</title>
 <style>
-body {
-  background-color: #000;
-  color: #fff;
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-}
-header {
-  background-color: #001f3f;
-  padding: 10px;
-  text-align: center;
-}
-header h1 {
-  margin: 0;
-  color: #00aaff;
-}
-.container {
-  max-width: 800px;
-  margin: auto;
-  padding: 20px;
-}
-.palpite {
-  background-color: #111;
-  border: 2px solid #00aaff;
-  border-radius: 12px;
-  padding: 15px;
-  margin: 15px 0;
-  box-shadow: 0 0 10px rgba(0, 170, 255, 0.4);
-}
-nav {
-  text-align: center;
-  margin-top: 10px;
-}
-nav a {
-  color: #00aaff;
-  margin: 0 10px;
-  text-decoration: none;
-}
+  body {
+    font-family: Arial, sans-serif;
+    background: black;
+    color: white;
+    padding: 10px;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  h1 {
+    color: #00aaff;
+  }
+  .palpite-card {
+    background: #111;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+  }
+  .vip {
+    border-left: 5px solid gold;
+  }
 </style>
 </head>
 <body>
@@ -51,28 +35,63 @@ nav a {
   <h1>Palpites Morros</h1>
 </header>
 
-<nav>
-  <a href="vip.html">Área VIP</a>
-  <a href="admin.html">Administrador</a>
-</nav>
+<h2>Palpites Públicos</h2>
+<div id="publicos"></div>
 
-<div class="container" id="palpites"></div>
+<h2>Área VIP (senha para acesso)</h2>
+<input type="password" id="senhaVip" placeholder="Digite a senha VIP" />
+<button onclick="mostrarVip()">Entrar VIP</button>
+
+<div id="vip" style="display:none; margin-top:20px;"></div>
 
 <script>
-const palpites = JSON.parse(localStorage.getItem('palpites') || '[]');
+  let palpites = [];
 
-const container = document.getElementById('palpites');
-palpites.filter(p => p.tipo === 'publico').forEach(p => {
-  const div = document.createElement('div');
-  div.className = 'palpite';
-  div.innerHTML = `
-    <p><strong>Jogo:</strong> ${p.jogo}</p>
-    <p><strong>Vitória:</strong> ${p.vitoria}</p>
-    <p><strong>Gols:</strong> ${p.gols}</p>
-    <p><strong>Escanteios:</strong> ${p.escanteios}</p>
-  `;
-  container.appendChild(div);
-});
+  async function carregarPalpites() {
+    try {
+      const response = await fetch('palpites.json');
+      palpites = await response.json();
+      mostrarPalpitesPublicos();
+    } catch (e) {
+      document.getElementById('publicos').innerText = 'Erro ao carregar palpites.';
+    }
+  }
+
+  function mostrarPalpitesPublicos() {
+    const container = document.getElementById('publicos');
+    container.innerHTML = '';
+    palpites.filter(p => p.tipo === 'publico').forEach(p => {
+      const div = document.createElement('div');
+      div.className = 'palpite-card';
+      div.innerHTML = `<strong>${p.jogo}</strong><br>
+        Gols: ${p.gols}<br>
+        Escanteios: ${p.escanteios}<br>
+        Vitória: ${p.vitoria}`;
+      container.appendChild(div);
+    });
+  }
+
+  function mostrarVip() {
+    const senha = document.getElementById('senhaVip').value;
+    const vipContainer = document.getElementById('vip');
+    if (senha === 'Morros321') {
+      vipContainer.style.display = 'block';
+      vipContainer.innerHTML = '';
+      palpites.filter(p => p.tipo === 'vip').forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'palpite-card vip';
+        div.innerHTML = `<strong>${p.jogo}</strong><br>
+          Gols: ${p.gols}<br>
+          Escanteios: ${p.escanteios}<br>
+          Vitória: ${p.vitoria}`;
+        vipContainer.appendChild(div);
+      });
+    } else {
+      alert('Senha VIP incorreta.');
+    }
+  }
+
+  carregarPalpites();
 </script>
 
 </body>
