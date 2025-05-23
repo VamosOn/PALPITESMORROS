@@ -4,53 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Palpites Morros</title>
-    <style>
-        body {
-            background-color: #000;
-            color: #fff;
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
-        .card {
-            background-color: #101020;
-            border: 1px solid #00f;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 10px;
-        }
-        .card h3 {
-            margin-top: 0;
-            color: #00f;
-        }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <h1>Palpites Morros</h1>
-    <div id="palpites"></div>
+    <header>
+        <h1>Palpites Morros</h1>
+    </header>
+
+    <main>
+        <div id="palpites" class="cards"></div>
+    </main>
 
     <script>
-        const timestamp = new Date().getTime(); // cache busting
+        const timestamp = new Date().getTime(); // Para evitar cache
         fetch(`palpites.json?v=${timestamp}`)
             .then(res => res.json())
             .then(data => {
                 const container = document.getElementById('palpites');
-                data.forEach(palpite => {
+                data.forEach(p => {
                     const card = document.createElement('div');
                     card.className = 'card';
                     card.innerHTML = `
-                        <h3>${palpite.jogo}</h3>
-                        <p><strong>Gols:</strong> ${palpite.gols}</p>
-                        <p><strong>Escanteios:</strong> ${palpite.escanteios}</p>
-                        <p><strong>Vitória:</strong> ${palpite.vitoria}</p>
-                        <p><strong>Tipo:</strong> ${palpite.tipo === 'vip' ? 'VIP 🔒' : 'Público 🌐'}</p>
+                        <h2>${p.jogo}</h2>
+                        <p><strong>Gols:</strong> ${p.gols}</p>
+                        <p><strong>Escanteios:</strong> ${p.escanteios}</p>
+                        <p><strong>Vitória:</strong> ${p.vitoria}</p>
+                        <p class="tipo">${p.tipo === 'vip' ? '🔒 VIP' : '🌐 Público'}</p>
                     `;
                     container.appendChild(card);
                 });
             })
-            .catch(error => {
-                console.error('Erro ao carregar palpites:', error);
-                const container = document.getElementById('palpites');
-                container.innerHTML = `<p>Erro ao carregar os palpites.</p>`;
+            .catch(() => {
+                document.getElementById('palpites').innerHTML = '<p>Não foi possível carregar os palpites.</p>';
             });
     </script>
 </body>
