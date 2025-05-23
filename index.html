@@ -6,90 +6,53 @@
 <title>Palpites Morros</title>
 <style>
   body {
-    background-color: #000;
+    background: #000;
     color: #00aaff;
     font-family: Arial, sans-serif;
-    margin: 0; padding: 0;
-    min-height: 100vh;
+    margin: 0; padding: 0 20px;
   }
   header {
-    background: #001f33;
-    padding: 15px 20px;
     text-align: center;
-    font-size: 28px;
+    padding: 20px 0;
+    border-bottom: 3px solid #00aaff;
+    font-size: 2rem;
     font-weight: bold;
-    color: #00aaff;
-  }
-  main {
-    max-width: 800px;
-    margin: 30px auto 60px;
-    padding: 0 20px;
-  }
-  #lista-palpites {
-    margin-top: 20px;
   }
   .palpite-item {
-    background: #001f33;
-    border: 1px solid #00aaff;
-    border-radius: 8px;
-    padding: 12px 15px;
-    margin-bottom: 12px;
-  }
-  .palpite-item strong {
-    color: #00e5ff;
-  }
-  #btn-vip {
-    margin-top: 25px;
-    background-color: #00aaff;
-    color: #000;
-    border: none;
-    padding: 12px 20px;
-    font-size: 18px;
+    background: #111;
+    margin: 10px 0;
+    padding: 10px;
     border-radius: 6px;
-    cursor: pointer;
-  }
-  #btn-vip:hover {
-    background-color: #0077aa;
+    border: 1px solid #00aaff;
   }
   #vip-area {
     margin-top: 30px;
-    display: none;
+    border-top: 3px solid #00aaff;
+    padding-top: 20px;
   }
-  #vip-area h2 {
-    color: #00e5ff;
+  #vip-login, #vip-palpite-list {
+    max-width: 400px;
+    margin: 0 auto;
   }
-  #vip-login {
-    margin-top: 20px;
-  }
-  #vip-login input[type="password"] {
-    padding: 10px;
-    font-size: 18px;
-    border: 2px solid #00aaff;
-    border-radius: 5px;
-    width: 250px;
-    background: #000;
+  input[type="password"] {
+    padding: 8px;
+    width: 70%;
+    border: 1px solid #00aaff;
+    border-radius: 4px;
+    background: #222;
     color: #00aaff;
   }
-  #vip-login button {
-    padding: 10px 15px;
-    font-size: 18px;
-    background-color: #00aaff;
-    border: none;
-    border-radius: 5px;
+  button {
+    background: #00aaff;
     color: #000;
-    cursor: pointer;
+    border: none;
+    padding: 9px 15px;
     margin-left: 10px;
+    border-radius: 4px;
+    cursor: pointer;
   }
-  #vip-login button:hover {
-    background-color: #0077aa;
-  }
-  #erro-vip {
-    margin-top: 10px;
-    color: #ff4444;
-  }
-  #vip-palpite-list .palpite-item {
-    border-color: #ffaa00;
-    background: #111600;
+  button:hover {
+    background: #0088cc;
   }
 </style>
 </head>
@@ -97,79 +60,66 @@
 
 <header>Palpites Morros</header>
 
-<main>
-  <section>
-    <h2>Palpites Públicos</h2>
-    <div id="lista-palpites"></div>
-  </section>
+<section id="palpites-publicos">
+  <h2>Palpites Públicos</h2>
+  <div id="publico-list"></div>
+</section>
 
-  <button id="btn-vip">Entrar na Área VIP</button>
-
-  <section id="vip-area">
-    <h2>Área VIP - Palpites Exclusivos</h2>
-    <div id="vip-login">
-      <input type="password" id="senha-vip" placeholder="Digite a senha VIP" />
-      <button id="btn-entrar-vip">Entrar</button>
-      <div id="erro-vip"></div>
-    </div>
-    <div id="vip-palpite-list"></div>
-  </section>
-</main>
+<section id="vip-area">
+  <h2>Área VIP</h2>
+  <div id="vip-login">
+    <p>Digite a senha para acessar os palpites VIP:</p>
+    <input type="password" id="senha-vip" placeholder="Senha VIP" />
+    <button id="btn-vip-entrar">Entrar</button>
+    <p id="vip-msg" style="color:#faa; margin-top:8px;"></p>
+  </div>
+  <div id="vip-palpite-list" style="display:none;"></div>
+</section>
 
 <script>
-  const senhaVIP = 'Morros321';
-  const btnVip = document.getElementById('btn-vip');
-  const vipArea = document.getElementById('vip-area');
-  const vipLoginDiv = document.getElementById('vip-login');
-  const senhaVipInput = document.getElementById('senha-vip');
-  const btnEntrarVip = document.getElementById('btn-entrar-vip');
-  const erroVipDiv = document.getElementById('erro-vip');
-  const listaPalpitesDiv = document.getElementById('lista-palpites');
-  const vipPalpiteListDiv = document.getElementById('vip-palpite-list');
-
-  // Função para pegar palpites do localStorage
-  function pegarPalpites() {
-    const dados = localStorage.getItem('palpitesMorros');
-    if (dados) {
-      return JSON.parse(dados);
-    }
-    return [];
+  // Funções para pegar palpites do localStorage
+  function pegarPalpitesPublicos() {
+    const dados = localStorage.getItem('palpitesMorrosPublicos');
+    return dados ? JSON.parse(dados) : [];
+  }
+  function pegarPalpitesVIP() {
+    const dados = localStorage.getItem('palpitesMorrosVIP');
+    return dados ? JSON.parse(dados) : [];
   }
 
-  // Mostrar palpites públicos (exemplo: pode ser uma filtragem, aqui mostro todos)
+  // Mostrar palpites públicos
   function mostrarPalpitesPublicos() {
-    const palpites = pegarPalpites();
-    listaPalpitesDiv.innerHTML = '';
-    if (palpites.length === 0) {
-      listaPalpitesDiv.innerHTML = '<p>Nenhum palpite disponível no momento.</p>';
+    const publicoList = document.getElementById('publico-list');
+    const palpites = pegarPalpitesPublicos();
+    publicoList.innerHTML = '';
+    if(palpites.length === 0) {
+      publicoList.innerHTML = '<p>Nenhum palpite público disponível.</p>';
       return;
     }
-    // Aqui podemos mostrar todos ou só parte para público
-    palpites.forEach((p) => {
+    palpites.forEach(p => {
       const div = document.createElement('div');
       div.className = 'palpite-item';
       div.innerHTML = `
         <strong>${p.jogo}</strong><br/>
         Gols: ${p.gols} | Escanteios: ${p.escanteios} | Vitória: ${p.vitoria} | Resultado exato: ${p.resultado}
       `;
-      listaPalpitesDiv.appendChild(div);
+      publicoList.appendChild(div);
     });
   }
 
-  // Mostrar área VIP após login
+  // Mostrar área VIP com palpites VIP
   function mostrarVipArea() {
-    vipLoginDiv.style.display = 'none';
+    document.getElementById('vip-login').style.display = 'none';
+    const vipPalpiteListDiv = document.getElementById('vip-palpite-list');
     vipPalpiteListDiv.style.display = 'block';
-    vipArea.style.borderTop = '2px solid #ffaa00';
-    // Por exemplo, pode mostrar os mesmos palpites, ou palpites extras
-    // Aqui, só mostro os mesmos, mas com outra cor para destacar
-    const palpites = pegarPalpites();
     vipPalpiteListDiv.innerHTML = '';
-    if (palpites.length === 0) {
+
+    const palpitesVIP = pegarPalpitesVIP();
+    if(palpitesVIP.length === 0) {
       vipPalpiteListDiv.innerHTML = '<p>Nenhum palpite VIP disponível.</p>';
       return;
     }
-    palpites.forEach((p) => {
+    palpitesVIP.forEach(p => {
       const div = document.createElement('div');
       div.className = 'palpite-item';
       div.innerHTML = `
@@ -180,27 +130,18 @@
     });
   }
 
-  // Botão para mostrar área VIP (login)
-  btnVip.addEventListener('click', () => {
-    vipArea.style.display = 'block';
-    btnVip.style.display = 'none';
-    senhaVipInput.focus();
-  });
-
-  // Login VIP
-  btnEntrarVip.addEventListener('click', () => {
-    const senha = senhaVipInput.value.trim();
-    if (senha === senhaVIP) {
-      erroVipDiv.textContent = '';
+  document.getElementById('btn-vip-entrar').addEventListener('click', () => {
+    const senhaInput = document.getElementById('senha-vip').value;
+    const msg = document.getElementById('vip-msg');
+    if(senhaInput === 'Morros321') {
       mostrarVipArea();
+      msg.textContent = '';
     } else {
-      erroVipDiv.textContent = 'Senha VIP incorreta. Tente novamente.';
-      senhaVipInput.value = '';
-      senhaVipInput.focus();
+      msg.textContent = 'Senha incorreta.';
     }
   });
 
-  // Inicializar mostrando palpites públicos
+  // Inicializa página
   mostrarPalpitesPublicos();
 </script>
 
