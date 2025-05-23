@@ -1,67 +1,96 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Administração Palpites Morros</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    background: black;
-    color: white;
-    padding: 20px;
-  }
-  textarea {
-    width: 100%;
-    height: 400px;
-    background: #111;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-family: monospace;
-    font-size: 14px;
-    padding: 10px;
-  }
-  button {
-    background: #0066ff;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 8px;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 10px;
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Palpites Morros</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>Administração Palpites Morros</h1>
-<p>Edite os palpites no formato JSON abaixo e copie para atualizar o arquivo <code>palpites.json</code> no seu repositório GitHub.</p>
+<header>
+  <h1>Administração - Palpites Morros</h1>
+</header>
 
-<textarea id="jsonPalpites">[
-  {
-    "jogo": "Betis x Valencia",
-    "gols": "2-1",
-    "escanteios": "8",
-    "vitoria": "Betis",
-    "tipo": "publico"
-  }
-]</textarea>
+<div id="login">
+  <h2>Digite a senha do Admin:</h2>
+  <input type="password" id="senha" placeholder="Senha">
+  <button onclick="verificarSenha()">Entrar</button>
+</div>
 
-<button onclick="validarJson()">Validar e Copiar JSON</button>
+<div id="adminPanel" style="display:none;">
+  <h2>Adicionar Palpite</h2>
+  <input type="text" id="jogo" placeholder="Jogo">
+  <input type="text" id="vitoria" placeholder="Vitória">
+  <input type="text" id="gols" placeholder="Gols">
+  <input type="text" id="escanteios" placeholder="Escanteios">
+  <select id="tipo">
+    <option value="publico">Público</option>
+    <option value="vip">VIP</option>
+  </select>
+  <button onclick="adicionarPalpite()">Adicionar</button>
+
+  <h2>Palpites Cadastrados</h2>
+  <div id="listaPalpites"></div>
+</div>
 
 <script>
-  function validarJson() {
-    const texto = document.getElementById('jsonPalpites').value;
-    try {
-      JSON.parse(texto);
-      alert('JSON válido! Copie o texto para atualizar o arquivo palpites.json no GitHub.');
-      navigator.clipboard.writeText(texto);
-    } catch (e) {
-      alert('JSON inválido: ' + e.message);
-    }
+let palpites = [];
+
+function verificarSenha() {
+  const senha = document.getElementById('senha').value;
+  if(senha === 'Morros123') {
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('adminPanel').style.display = 'block';
+    carregarPalpites();
+  } else {
+    alert('Senha incorreta!');
   }
+}
+
+function carregarPalpites() {
+  fetch('palpites.json')
+    .then(res => res.json())
+    .then(data => {
+      palpites = data;
+      mostrarPalpites();
+    });
+}
+
+function mostrarPalpites() {
+  const lista = document.getElementById('listaPalpites');
+  lista.innerHTML = '';
+  palpites.forEach((p, index) => {
+    lista.innerHTML += `
+      <div class="card">
+        <h2>${p.jogo}</h2>
+        <p><strong>Vitória:</strong> ${p.vitoria}</p>
+        <p><strong>Gols:</strong> ${p.gols}</p>
+        <p><strong>Escanteios:</strong> ${p.escanteios}</p>
+        <p><strong>Tipo:</strong> ${p.tipo}</p>
+        <button onclick="remover(${index})">Remover</button>
+      </div>
+    `;
+  });
+}
+
+function adicionarPalpite() {
+  const jogo = document.getElementById('jogo').value;
+  const vitoria = document.getElementById('vitoria').value;
+  const gols = document.getElementById('gols').value;
+  const escanteios = document.getElementById('escanteios').value;
+  const tipo = document.getElementById('tipo').value;
+
+  const novo = { jogo, vitoria, gols, escanteios, tipo };
+  palpites.push(novo);
+  mostrarPalpites();
+  alert('Palpite adicionado (lembre-se de atualizar manualmente no arquivo JSON se usar GitHub)');
+}
+
+function remover(index) {
+  palpites.splice(index, 1);
+  mostrarPalpites();
+}
 </script>
 
 </body>
