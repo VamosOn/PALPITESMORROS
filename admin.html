@@ -1,66 +1,264 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Administração - Palpites Morros</title>
-  <link rel="stylesheet" href="css/style.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Administração - Palpites Morros</title>
+<style>
+  body {
+    background-color: #000;
+    color: #00aaff;
+    font-family: Arial, sans-serif;
+    margin: 0; padding: 0;
+    min-height: 100vh;
+  }
+  header {
+    background: #001f33;
+    padding: 15px 20px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #00aaff;
+  }
+  #login-admin {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 50px auto;
+    max-width: 320px;
+  }
+  #login-admin input[type="password"] {
+    padding: 10px;
+    font-size: 18px;
+    border: 2px solid #00aaff;
+    border-radius: 5px;
+    width: 100%;
+    background: #000;
+    color: #00aaff;
+  }
+  #login-admin button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #00aaff;
+    border: none;
+    border-radius: 5px;
+    color: #000;
+    cursor: pointer;
+  }
+  #login-admin button:hover {
+    background-color: #0077aa;
+  }
+  #erro-admin {
+    margin-top: 10px;
+    color: #ff4444;
+  }
+  #admin-panel {
+    max-width: 700px;
+    margin: 30px auto 50px;
+    padding: 0 20px;
+    display: none; /* começa oculto */
+  }
+  form {
+    background: #001f33;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #00aaff;
+  }
+  form label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+  }
+  form input[type="text"], form input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    background: #000;
+    border: 2px solid #00aaff;
+    border-radius: 5px;
+    color: #00aaff;
+    font-size: 16px;
+  }
+  form button {
+    margin-top: 20px;
+    padding: 12px 20px;
+    font-size: 18px;
+    background-color: #00aaff;
+    border: none;
+    border-radius: 5px;
+    color: #000;
+    cursor: pointer;
+  }
+  form button:hover {
+    background-color: #0077aa;
+  }
+  #lista-palpites {
+    margin-top: 30px;
+  }
+  .palpite-item {
+    background: #001f33;
+    border: 1px solid #00aaff;
+    border-radius: 8px;
+    padding: 12px 15px;
+    margin-bottom: 12px;
+  }
+  .palpite-item strong {
+    color: #00e5ff;
+  }
+  #btn-limpar {
+    background-color: #ff4444;
+    margin-top: 10px;
+  }
+  #btn-limpar:hover {
+    background-color: #cc0000;
+  }
+</style>
 </head>
 <body>
-  <header>
-    <h1>Palpites Morros - Administração</h1>
-  </header>
 
-  <main class="admin-container">
-    <section id="login-section">
-      <h2>Login do Administrador</h2>
-      <form id="admin-login-form">
-        <input type="password" id="admin-password" placeholder="Digite a senha do administrador" required />
-        <button type="submit">Entrar</button>
-      </form>
-      <p id="admin-error" class="error-msg"></p>
-    </section>
+<header>Administração - Palpites Morros</header>
 
-    <section id="panel-section" style="display:none;">
-      <h2>Cadastro de Palpites</h2>
+<div id="login-admin">
+  <input type="password" id="senha-admin" placeholder="Digite a senha administrativa" />
+  <button id="btn-entrar-admin">Entrar</button>
+  <div id="erro-admin"></div>
+</div>
 
-      <form id="palpite-form">
-        <label>
-          Jogo:<br />
-          <input type="text" id="jogo" placeholder="Ex: Bétis x Valencia" required />
-        </label>
+<div id="admin-panel">
+  <form id="form-palpite">
+    <label for="jogo">Jogo:</label>
+    <input type="text" id="jogo" placeholder="Ex: Bétis x Valencia" required />
 
-        <label>
-          Gols:<br />
-          <input type="text" id="gols" placeholder="Ex: 2-1" required />
-        </label>
+    <label for="gols">Gols (ex: 2-1):</label>
+    <input type="text" id="gols" placeholder="Ex: 2-1" required />
 
-        <label>
-          Escanteios:<br />
-          <input type="text" id="escanteios" placeholder="Ex: 7-5" required />
-        </label>
+    <label for="escanteios">Escanteios (número):</label>
+    <input type="number" id="escanteios" min="0" placeholder="Ex: 8" required />
 
-        <label>
-          Vitória:<br />
-          <input type="text" id="vitoria" placeholder="Ex: Bétis" required />
-        </label>
+    <label for="vitoria">Vitória (nome do time):</label>
+    <input type="text" id="vitoria" placeholder="Ex: Bétis" required />
 
-        <label>
-          Resultado exato:<br />
-          <input type="text" id="resultado" placeholder="Ex: 2-1" required />
-        </label>
+    <label for="resultado">Resultado exato (ex: 2-1):</label>
+    <input type="text" id="resultado" placeholder="Ex: 2-1" required />
 
-        <button type="submit">Adicionar Palpite</button>
-      </form>
+    <button type="submit">Adicionar Palpite</button>
+  </form>
 
-      <h3>Palpites Cadastrados</h3>
-      <ul id="palpites-list"></ul>
+  <button id="btn-limpar">Limpar todos os palpites</button>
 
-      <h3>Código HTML gerado</h3>
-      <textarea id="generated-code" rows="10" readonly></textarea>
-    </section>
-  </main>
+  <div id="lista-palpites">
+    <!-- Palpites serão listados aqui -->
+  </div>
+</div>
 
-  <script src="js/script.js"></script>
+<script>
+  const senhaAdmin = 'Morros123';
+  const loginDiv = document.getElementById('login-admin');
+  const adminPanel = document.getElementById('admin-panel');
+  const btnEntrar = document.getElementById('btn-entrar-admin');
+  const senhaInput = document.getElementById('senha-admin');
+  const erroDiv = document.getElementById('erro-admin');
+
+  const formPalpite = document.getElementById('form-palpite');
+  const listaPalpitesDiv = document.getElementById('lista-palpites');
+  const btnLimpar = document.getElementById('btn-limpar');
+
+  // Função para pegar palpites do localStorage
+  function pegarPalpites() {
+    const dados = localStorage.getItem('palpitesMorros');
+    if (dados) {
+      return JSON.parse(dados);
+    }
+    return [];
+  }
+
+  // Salvar palpites no localStorage
+  function salvarPalpites(palpites) {
+    localStorage.setItem('palpitesMorros', JSON.stringify(palpites));
+  }
+
+  // Mostrar palpites na tela
+  function mostrarPalpites() {
+    const palpites = pegarPalpites();
+    listaPalpitesDiv.innerHTML = '';
+    if (palpites.length === 0) {
+      listaPalpitesDiv.innerHTML = '<p>Nenhum palpite cadastrado.</p>';
+      return;
+    }
+    palpites.forEach((p, i) => {
+      const div = document.createElement('div');
+      div.className = 'palpite-item';
+      div.innerHTML = `
+        <strong>${p.jogo}</strong><br/>
+        Gols: ${p.gols} | Escanteios: ${p.escanteios} | Vitória: ${p.vitoria} | Resultado exato: ${p.resultado}
+        <br><button onclick="removerPalpite(${i})" style="margin-top:6px; cursor:pointer; background:#cc0000; color:#fff; border:none; border-radius:4px; padding:4px 8px;">Remover</button>
+      `;
+      listaPalpitesDiv.appendChild(div);
+    });
+  }
+
+  // Remover um palpite pelo índice
+  function removerPalpite(index) {
+    const palpites = pegarPalpites();
+    palpites.splice(index, 1);
+    salvarPalpites(palpites);
+    mostrarPalpites();
+  }
+
+  // Evento de login admin
+  btnEntrar.addEventListener('click', () => {
+    const senha = senhaInput.value.trim();
+    if(senha === senhaAdmin) {
+      erroDiv.textContent = '';
+      loginDiv.style.display = 'none';
+      adminPanel.style.display = 'block';
+      mostrarPalpites();
+    } else {
+      erroDiv.textContent = 'Senha incorreta. Tente novamente.';
+      senhaInput.value = '';
+      senhaInput.focus();
+    }
+  });
+
+  // Envio do formulário para adicionar palpite
+  formPalpite.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const novoPalpite = {
+      jogo: formPalpite.jogo.value.trim(),
+      gols: formPalpite.gols.value.trim(),
+      escanteios: formPalpite.escanteios.value.trim(),
+      vitoria: formPalpite.vitoria.value.trim(),
+      resultado: formPalpite.resultado.value.trim()
+    };
+
+    // Validar campos simples
+    if (!novoPalpite.jogo || !novoPalpite.gols || !novoPalpite.escanteios || !novoPalpite.vitoria || !novoPalpite.resultado) {
+      alert('Preencha todos os campos!');
+      return;
+    }
+
+    // Salvar
+    const palpites = pegarPalpites();
+    palpites.push(novoPalpite);
+    salvarPalpites(palpites);
+    mostrarPalpites();
+
+    // Limpar formulário
+    formPalpite.reset();
+  });
+
+  // Botão limpar palpites
+  btnLimpar.addEventListener('click', () => {
+    if(confirm('Deseja realmente apagar todos os palpites?')) {
+      localStorage.removeItem('palpitesMorros');
+      mostrarPalpites();
+    }
+  });
+
+  // Deixar função global para botão remover
+  window.removerPalpite = removerPalpite;
+</script>
+
 </body>
 </html>
