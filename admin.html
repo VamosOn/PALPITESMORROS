@@ -3,261 +3,227 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Administração - Palpites Morros</title>
+<title>Administração Palpites Morros</title>
 <style>
   body {
-    background-color: #000;
+    background: #000;
     color: #00aaff;
     font-family: Arial, sans-serif;
-    margin: 0; padding: 0;
-    min-height: 100vh;
+    margin: 0; padding: 20px;
   }
   header {
-    background: #001f33;
-    padding: 15px 20px;
     text-align: center;
-    font-size: 24px;
+    font-size: 2rem;
     font-weight: bold;
-    color: #00aaff;
+    border-bottom: 3px solid #00aaff;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
   }
-  #login-admin {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 50px auto;
-    max-width: 320px;
+  #login-div, #admin-div {
+    max-width: 500px;
+    margin: 0 auto;
   }
-  #login-admin input[type="password"] {
-    padding: 10px;
-    font-size: 18px;
-    border: 2px solid #00aaff;
-    border-radius: 5px;
-    width: 100%;
-    background: #000;
-    color: #00aaff;
-  }
-  #login-admin button {
-    margin-top: 15px;
-    padding: 10px 20px;
-    font-size: 18px;
-    background-color: #00aaff;
-    border: none;
-    border-radius: 5px;
-    color: #000;
-    cursor: pointer;
-  }
-  #login-admin button:hover {
-    background-color: #0077aa;
-  }
-  #erro-admin {
-    margin-top: 10px;
-    color: #ff4444;
-  }
-  #admin-panel {
-    max-width: 700px;
-    margin: 30px auto 50px;
-    padding: 0 20px;
-    display: none; /* começa oculto */
-  }
-  form {
-    background: #001f33;
-    padding: 20px;
-    border-radius: 8px;
-    border: 1px solid #00aaff;
-  }
-  form label {
+  label {
     display: block;
-    margin-top: 10px;
-    font-weight: bold;
+    margin: 10px 0 5px;
   }
-  form input[type="text"], form input[type="number"] {
+  input[type="password"], input[type="text"], select {
     width: 100%;
     padding: 8px;
-    margin-top: 5px;
-    background: #000;
-    border: 2px solid #00aaff;
-    border-radius: 5px;
+    background: #111;
+    border: 1px solid #00aaff;
     color: #00aaff;
-    font-size: 16px;
-  }
-  form button {
-    margin-top: 20px;
-    padding: 12px 20px;
-    font-size: 18px;
-    background-color: #00aaff;
-    border: none;
     border-radius: 5px;
+  }
+  button {
+    background: #00aaff;
     color: #000;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 15px;
+    border-radius: 5px;
     cursor: pointer;
   }
-  form button:hover {
-    background-color: #0077aa;
+  button:hover {
+    background: #0088cc;
   }
-  #lista-palpites {
+  #palpites-list {
     margin-top: 30px;
   }
   .palpite-item {
-    background: #001f33;
+    background: #111;
     border: 1px solid #00aaff;
-    border-radius: 8px;
-    padding: 12px 15px;
-    margin-bottom: 12px;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
   }
   .palpite-item strong {
-    color: #00e5ff;
+    font-size: 1.1rem;
   }
-  #btn-limpar {
-    background-color: #ff4444;
-    margin-top: 10px;
+  .tipo-publico {
+    color: #00ff88;
+    font-weight: bold;
   }
-  #btn-limpar:hover {
-    background-color: #cc0000;
+  .tipo-vip {
+    color: #ffaa00;
+    font-weight: bold;
   }
 </style>
 </head>
 <body>
 
-<header>Administração - Palpites Morros</header>
+<header>Administração Palpites Morros</header>
 
-<div id="login-admin">
-  <input type="password" id="senha-admin" placeholder="Digite a senha administrativa" />
-  <button id="btn-entrar-admin">Entrar</button>
-  <div id="erro-admin"></div>
+<div id="login-div">
+  <label for="senha-admin">Senha do Administrador:</label>
+  <input type="password" id="senha-admin" placeholder="Digite a senha" />
+  <button id="btn-login">Entrar</button>
+  <p id="msg-login" style="color:#faa; margin-top:8px;"></p>
 </div>
 
-<div id="admin-panel">
+<div id="admin-div" style="display:none;">
   <form id="form-palpite">
     <label for="jogo">Jogo:</label>
-    <input type="text" id="jogo" placeholder="Ex: Bétis x Valencia" required />
-
-    <label for="gols">Gols (ex: 2-1):</label>
-    <input type="text" id="gols" placeholder="Ex: 2-1" required />
-
-    <label for="escanteios">Escanteios (número):</label>
-    <input type="number" id="escanteios" min="0" placeholder="Ex: 8" required />
-
-    <label for="vitoria">Vitória (nome do time):</label>
-    <input type="text" id="vitoria" placeholder="Ex: Bétis" required />
-
-    <label for="resultado">Resultado exato (ex: 2-1):</label>
-    <input type="text" id="resultado" placeholder="Ex: 2-1" required />
-
-    <button type="submit">Adicionar Palpite</button>
+    <input type="text" id="jogo" required />
+    
+    <label for="gols">Gols:</label>
+    <input type="text" id="gols" required />
+    
+    <label for="escanteios">Escanteios:</label>
+    <input type="text" id="escanteios" required />
+    
+    <label for="vitoria">Vitória:</label>
+    <input type="text" id="vitoria" required />
+    
+    <label for="resultado">Resultado exato:</label>
+    <input type="text" id="resultado" required />
+    
+    <label for="tipo-palpite">Tipo de palpite:</label>
+    <select id="tipo-palpite" required>
+      <option value="publico">Público</option>
+      <option value="vip">VIP</option>
+    </select>
+    
+    <button type="submit">Adicionar palpite</button>
   </form>
 
-  <button id="btn-limpar">Limpar todos os palpites</button>
-
-  <div id="lista-palpites">
-    <!-- Palpites serão listados aqui -->
+  <div id="palpites-list">
+    <h2>Palpites Salvos</h2>
+    <div id="lista-palpites"></div>
   </div>
 </div>
 
 <script>
-  const senhaAdmin = 'Morros123';
-  const loginDiv = document.getElementById('login-admin');
-  const adminPanel = document.getElementById('admin-panel');
-  const btnEntrar = document.getElementById('btn-entrar-admin');
-  const senhaInput = document.getElementById('senha-admin');
-  const erroDiv = document.getElementById('erro-admin');
+  const senhaAdminCorreta = 'Morros123';
+
+  const loginDiv = document.getElementById('login-div');
+  const adminDiv = document.getElementById('admin-div');
+  const msgLogin = document.getElementById('msg-login');
 
   const formPalpite = document.getElementById('form-palpite');
   const listaPalpitesDiv = document.getElementById('lista-palpites');
-  const btnLimpar = document.getElementById('btn-limpar');
 
-  // Função para pegar palpites do localStorage
-  function pegarPalpites() {
-    const dados = localStorage.getItem('palpitesMorros');
-    if (dados) {
-      return JSON.parse(dados);
-    }
-    return [];
+  const jogoInput = document.getElementById('jogo');
+  const golsInput = document.getElementById('gols');
+  const escanteiosInput = document.getElementById('escanteios');
+  const vitoriaInput = document.getElementById('vitoria');
+  const resultadoInput = document.getElementById('resultado');
+  const tipoPalpiteSelect = document.getElementById('tipo-palpite');
+
+  // Funções para pegar e salvar palpites
+  function pegarPalpitesPublicos() {
+    const dados = localStorage.getItem('palpitesMorrosPublicos');
+    return dados ? JSON.parse(dados) : [];
+  }
+  function salvarPalpitesPublicos(palpites) {
+    localStorage.setItem('palpitesMorrosPublicos', JSON.stringify(palpites));
+  }
+  function pegarPalpitesVIP() {
+    const dados = localStorage.getItem('palpitesMorrosVIP');
+    return dados ? JSON.parse(dados) : [];
+  }
+  function salvarPalpitesVIP(palpites) {
+    localStorage.setItem('palpitesMorrosVIP', JSON.stringify(palpites));
   }
 
-  // Salvar palpites no localStorage
-  function salvarPalpites(palpites) {
-    localStorage.setItem('palpitesMorros', JSON.stringify(palpites));
-  }
-
-  // Mostrar palpites na tela
+  // Mostrar todos os palpites (públicos e VIP) na administração
   function mostrarPalpites() {
-    const palpites = pegarPalpites();
+    const publicos = pegarPalpitesPublicos();
+    const vips = pegarPalpitesVIP();
+
     listaPalpitesDiv.innerHTML = '';
-    if (palpites.length === 0) {
-      listaPalpitesDiv.innerHTML = '<p>Nenhum palpite cadastrado.</p>';
+
+    if(publicos.length === 0 && vips.length === 0) {
+      listaPalpitesDiv.innerHTML = '<p>Nenhum palpite salvo ainda.</p>';
       return;
     }
-    palpites.forEach((p, i) => {
+
+    // Mostrar públicos
+    publicos.forEach(p => {
       const div = document.createElement('div');
-      div.className = 'palpite-item';
+      div.className = 'palpite-item tipo-publico';
       div.innerHTML = `
-        <strong>${p.jogo}</strong><br/>
+        <strong>${p.jogo} (Público)</strong><br/>
         Gols: ${p.gols} | Escanteios: ${p.escanteios} | Vitória: ${p.vitoria} | Resultado exato: ${p.resultado}
-        <br><button onclick="removerPalpite(${i})" style="margin-top:6px; cursor:pointer; background:#cc0000; color:#fff; border:none; border-radius:4px; padding:4px 8px;">Remover</button>
+      `;
+      listaPalpitesDiv.appendChild(div);
+    });
+
+    // Mostrar VIP
+    vips.forEach(p => {
+      const div = document.createElement('div');
+      div.className = 'palpite-item tipo-vip';
+      div.innerHTML = `
+        <strong>${p.jogo} (VIP)</strong><br/>
+        Gols: ${p.gols} | Escanteios: ${p.escanteios} | Vitória: ${p.vitoria} | Resultado exato: ${p.resultado}
       `;
       listaPalpitesDiv.appendChild(div);
     });
   }
 
-  // Remover um palpite pelo índice
-  function removerPalpite(index) {
-    const palpites = pegarPalpites();
-    palpites.splice(index, 1);
-    salvarPalpites(palpites);
-    mostrarPalpites();
-  }
-
-  // Evento de login admin
-  btnEntrar.addEventListener('click', () => {
-    const senha = senhaInput.value.trim();
-    if(senha === senhaAdmin) {
-      erroDiv.textContent = '';
+  // Login
+  document.getElementById('btn-login').addEventListener('click', () => {
+    const senhaDigitada = document.getElementById('senha-admin').value;
+    if(senhaDigitada === senhaAdminCorreta) {
       loginDiv.style.display = 'none';
-      adminPanel.style.display = 'block';
+      adminDiv.style.display = 'block';
       mostrarPalpites();
     } else {
-      erroDiv.textContent = 'Senha incorreta. Tente novamente.';
-      senhaInput.value = '';
-      senhaInput.focus();
+      msgLogin.textContent = 'Senha incorreta.';
     }
   });
 
-  // Envio do formulário para adicionar palpite
+  // Salvar palpites
   formPalpite.addEventListener('submit', (e) => {
     e.preventDefault();
-    const novoPalpite = {
-      jogo: formPalpite.jogo.value.trim(),
-      gols: formPalpite.gols.value.trim(),
-      escanteios: formPalpite.escanteios.value.trim(),
-      vitoria: formPalpite.vitoria.value.trim(),
-      resultado: formPalpite.resultado.value.trim()
-    };
 
-    // Validar campos simples
+    const novoPalpite = {
+      jogo: jogoInput.value.trim(),
+      gols: golsInput.value.trim(),
+      escanteios: escanteiosInput.value.trim(),
+      vitoria: vitoriaInput.value.trim(),
+      resultado: resultadoInput.value.trim(),
+    };
+    const tipo = tipoPalpiteSelect.value;
+
     if (!novoPalpite.jogo || !novoPalpite.gols || !novoPalpite.escanteios || !novoPalpite.vitoria || !novoPalpite.resultado) {
       alert('Preencha todos os campos!');
       return;
     }
 
-    // Salvar
-    const palpites = pegarPalpites();
-    palpites.push(novoPalpite);
-    salvarPalpites(palpites);
-    mostrarPalpites();
+    if(tipo === 'publico') {
+      const palpites = pegarPalpitesPublicos();
+      palpites.push(novoPalpite);
+      salvarPalpitesPublicos(palpites);
+    } else {
+      const palpites = pegarPalpitesVIP();
+      palpites.push(novoPalpite);
+      salvarPalpitesVIP(palpites);
+    }
 
-    // Limpar formulário
+    mostrarPalpites();
     formPalpite.reset();
   });
-
-  // Botão limpar palpites
-  btnLimpar.addEventListener('click', () => {
-    if(confirm('Deseja realmente apagar todos os palpites?')) {
-      localStorage.removeItem('palpitesMorros');
-      mostrarPalpites();
-    }
-  });
-
-  // Deixar função global para botão remover
-  window.removerPalpite = removerPalpite;
 </script>
 
 </body>
