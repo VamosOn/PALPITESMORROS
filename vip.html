@@ -1,49 +1,10 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Área VIP - Palpites Morros</title>
-<style>
-body {
-  background-color: #000;
-  color: #fff;
-  font-family: Arial, sans-serif;
-}
-header {
-  background-color: #001f3f;
-  padding: 10px;
-  text-align: center;
-}
-header h1 {
-  margin: 0;
-  color: #00aaff;
-}
-.container {
-  max-width: 800px;
-  margin: auto;
-  padding: 20px;
-}
-input[type="password"] {
-  padding: 10px;
-  width: 200px;
-}
-button {
-  padding: 10px 20px;
-  background-color: #00aaff;
-  border: none;
-  color: white;
-  cursor: pointer;
-}
-.palpite {
-  background-color: #111;
-  border: 2px solid #00aaff;
-  border-radius: 12px;
-  padding: 15px;
-  margin: 15px 0;
-  box-shadow: 0 0 10px rgba(0, 170, 255, 0.4);
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Área VIP - Palpites Morros</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -51,40 +12,42 @@ button {
   <h1>Área VIP - Palpites Morros</h1>
 </header>
 
-<div class="container" id="login">
-  <p>Digite a senha para acessar:</p>
-  <input type="password" id="senha">
-  <button onclick="entrar()">Entrar</button>
+<div id="login">
+  <h2>Digite a senha VIP:</h2>
+  <input type="password" id="senha" placeholder="Senha">
+  <button onclick="verificarSenha()">Entrar</button>
 </div>
 
-<div class="container" id="conteudo" style="display:none;"></div>
+<main id="palpitesVip" style="display:none;"></main>
 
 <script>
-function entrar() {
+function verificarSenha() {
   const senha = document.getElementById('senha').value;
   if(senha === 'Morros321') {
     document.getElementById('login').style.display = 'none';
-    document.getElementById('conteudo').style.display = 'block';
-    carregarPalpites();
+    document.getElementById('palpitesVip').style.display = 'grid';
+    carregarPalpitesVIP();
   } else {
     alert('Senha incorreta!');
   }
 }
 
-function carregarPalpites() {
-  const palpites = JSON.parse(localStorage.getItem('palpites') || '[]');
-  const container = document.getElementById('conteudo');
-  palpites.filter(p => p.tipo === 'vip').forEach(p => {
-    const div = document.createElement('div');
-    div.className = 'palpite';
-    div.innerHTML = `
-      <p><strong>Jogo:</strong> ${p.jogo}</p>
-      <p><strong>Vitória:</strong> ${p.vitoria}</p>
-      <p><strong>Gols:</strong> ${p.gols}</p>
-      <p><strong>Escanteios:</strong> ${p.escanteios}</p>
-    `;
-    container.appendChild(div);
-  });
+function carregarPalpitesVIP() {
+  fetch('palpites.json')
+    .then(res => res.json())
+    .then(data => {
+      const container = document.getElementById('palpitesVip');
+      data.filter(p => p.tipo === 'vip').forEach(palp => {
+        container.innerHTML += `
+          <div class="card">
+            <h2>${palp.jogo}</h2>
+            <p><strong>Vitória:</strong> ${palp.vitoria}</p>
+            <p><strong>Gols:</strong> ${palp.gols}</p>
+            <p><strong>Escanteios:</strong> ${palp.escanteios}</p>
+          </div>
+        `;
+      });
+    });
 }
 </script>
 
