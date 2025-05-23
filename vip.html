@@ -1,113 +1,92 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Área VIP - Palpites Morros</title>
-  <style>
-    body {
-      background-color: #000;
-      color: #00aaff;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background-color: #001f3f;
-      padding: 20px;
-      text-align: center;
-    }
-    header h1 {
-      margin: 0;
-    }
-    .container {
-      max-width: 800px;
-      margin: auto;
-      padding: 20px;
-    }
-    input, button {
-      padding: 10px;
-      margin: 5px;
-      border-radius: 5px;
-      border: none;
-      font-size: 16px;
-    }
-    input {
-      width: calc(100% - 22px);
-      background-color: #111;
-      color: #00aaff;
-    }
-    button {
-      background-color: #00aaff;
-      color: #000;
-      cursor: pointer;
-    }
-    .palpite {
-      background-color: #111;
-      padding: 10px;
-      border-radius: 8px;
-      margin: 10px 0;
-    }
-    .hidden {
-      display: none;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Área VIP - Palpites Morros</title>
+<style>
+body {
+  background-color: #000;
+  color: #fff;
+  font-family: Arial, sans-serif;
+}
+header {
+  background-color: #001f3f;
+  padding: 10px;
+  text-align: center;
+}
+header h1 {
+  margin: 0;
+  color: #00aaff;
+}
+.container {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+}
+input[type="password"] {
+  padding: 10px;
+  width: 200px;
+}
+button {
+  padding: 10px 20px;
+  background-color: #00aaff;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+.palpite {
+  background-color: #111;
+  border: 2px solid #00aaff;
+  border-radius: 12px;
+  padding: 15px;
+  margin: 15px 0;
+  box-shadow: 0 0 10px rgba(0, 170, 255, 0.4);
+}
+</style>
 </head>
 <body>
 
-  <header>
-    <h1>Área VIP - Palpites Morros</h1>
-  </header>
+<header>
+  <h1>Área VIP - Palpites Morros</h1>
+</header>
 
-  <div class="container">
+<div class="container" id="login">
+  <p>Digite a senha para acessar:</p>
+  <input type="password" id="senha">
+  <button onclick="entrar()">Entrar</button>
+</div>
 
-    <div id="login">
-      <h2>Login VIP</h2>
-      <input type="password" id="senha" placeholder="Digite a senha VIP">
-      <button onclick="logar()">Entrar</button>
-    </div>
+<div class="container" id="conteudo" style="display:none;"></div>
 
-    <div id="conteudo" class="hidden">
-      <h2>Palpites VIP</h2>
-      <div id="listaPalpites"></div>
-    </div>
+<script>
+function entrar() {
+  const senha = document.getElementById('senha').value;
+  if(senha === 'Morros321') {
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('conteudo').style.display = 'block';
+    carregarPalpites();
+  } else {
+    alert('Senha incorreta!');
+  }
+}
 
-  </div>
-
-  <script>
-    const senhaVIP = "Morros321";
-
-    function logar() {
-      const senha = document.getElementById('senha').value;
-      if (senha === senhaVIP) {
-        document.getElementById('login').classList.add('hidden');
-        document.getElementById('conteudo').classList.remove('hidden');
-        carregarPalpites();
-      } else {
-        alert('Senha incorreta!');
-      }
-    }
-
-    function carregarPalpites() {
-      const lista = document.getElementById('listaPalpites');
-      lista.innerHTML = '';
-      let palpites = JSON.parse(localStorage.getItem('palpites')) || [];
-
-      const palpitesVIP = palpites.filter(p => p.tipo === 'vip');
-
-      palpitesVIP.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'palpite';
-        div.innerHTML = `
-          <strong>Jogo:</strong> ${item.jogo} <br>
-          <strong>Vitória:</strong> ${item.vitoria} <br>
-          <strong>Gols:</strong> ${item.gols} <br>
-          <strong>Escanteios:</strong> ${item.escanteios}
-        `;
-        lista.appendChild(div);
-      });
-    }
-  </script>
+function carregarPalpites() {
+  const palpites = JSON.parse(localStorage.getItem('palpites') || '[]');
+  const container = document.getElementById('conteudo');
+  palpites.filter(p => p.tipo === 'vip').forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'palpite';
+    div.innerHTML = `
+      <p><strong>Jogo:</strong> ${p.jogo}</p>
+      <p><strong>Vitória:</strong> ${p.vitoria}</p>
+      <p><strong>Gols:</strong> ${p.gols}</p>
+      <p><strong>Escanteios:</strong> ${p.escanteios}</p>
+    `;
+    container.appendChild(div);
+  });
+}
+</script>
 
 </body>
 </html>
