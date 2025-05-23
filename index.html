@@ -1,86 +1,79 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Palpites Morros - Principal</title>
-  <style>
-    body {
-      background-color: #000;
-      color: #00aaff;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background-color: #001f3f;
-      padding: 20px;
-      text-align: center;
-    }
-    header h1 {
-      margin: 0;
-    }
-    nav {
-      text-align: center;
-      margin: 10px;
-    }
-    nav a {
-      color: #00aaff;
-      text-decoration: none;
-      margin: 0 10px;
-    }
-    .container {
-      max-width: 800px;
-      margin: auto;
-      padding: 20px;
-    }
-    .palpite {
-      background-color: #111;
-      padding: 10px;
-      border-radius: 8px;
-      margin: 10px 0;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Palpites Morros</title>
+<style>
+body {
+  background-color: #000;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+header {
+  background-color: #001f3f;
+  padding: 10px;
+  text-align: center;
+}
+header h1 {
+  margin: 0;
+  color: #00aaff;
+}
+.container {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+}
+.palpite {
+  background-color: #111;
+  border: 2px solid #00aaff;
+  border-radius: 12px;
+  padding: 15px;
+  margin: 15px 0;
+  box-shadow: 0 0 10px rgba(0, 170, 255, 0.4);
+}
+nav {
+  text-align: center;
+  margin-top: 10px;
+}
+nav a {
+  color: #00aaff;
+  margin: 0 10px;
+  text-decoration: none;
+}
+</style>
 </head>
 <body>
 
-  <header>
-    <h1>Palpites Morros</h1>
-  </header>
+<header>
+  <h1>Palpites Morros</h1>
+</header>
 
-  <nav>
-    <a href="vip.html">Área VIP</a>
-    <a href="admin.html">Administração</a>
-  </nav>
+<nav>
+  <a href="vip.html">Área VIP</a>
+  <a href="admin.html">Administrador</a>
+</nav>
 
-  <div class="container">
-    <h2>Palpites Públicos</h2>
-    <div id="listaPalpites"></div>
-  </div>
+<div class="container" id="palpites"></div>
 
-  <script>
-    function carregarPalpites() {
-      const lista = document.getElementById('listaPalpites');
-      lista.innerHTML = '';
-      let palpites = JSON.parse(localStorage.getItem('palpites')) || [];
+<script>
+const palpites = JSON.parse(localStorage.getItem('palpites') || '[]');
 
-      const palpitesPublicos = palpites.filter(p => p.tipo === 'publico');
-
-      palpitesPublicos.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'palpite';
-        div.innerHTML = `
-          <strong>Jogo:</strong> ${item.jogo} <br>
-          <strong>Vitória:</strong> ${item.vitoria} <br>
-          <strong>Gols:</strong> ${item.gols} <br>
-          <strong>Escanteios:</strong> ${item.escanteios}
-        `;
-        lista.appendChild(div);
-      });
-    }
-
-    carregarPalpites();
-  </script>
+const container = document.getElementById('palpites');
+palpites.filter(p => p.tipo === 'publico').forEach(p => {
+  const div = document.createElement('div');
+  div.className = 'palpite';
+  div.innerHTML = `
+    <p><strong>Jogo:</strong> ${p.jogo}</p>
+    <p><strong>Vitória:</strong> ${p.vitoria}</p>
+    <p><strong>Gols:</strong> ${p.gols}</p>
+    <p><strong>Escanteios:</strong> ${p.escanteios}</p>
+  `;
+  container.appendChild(div);
+});
+</script>
 
 </body>
 </html>
