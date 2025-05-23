@@ -1,23 +1,126 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Login Área VIP - Palpites Morros</title>
-  <link rel="stylesheet" href="css/style.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Palpites Morros</title>
+<style>
+  body {
+    background-color: #000;
+    color: #00aaff;
+    font-family: Arial, sans-serif;
+    margin: 0; padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  header {
+    background-color: #001f33;
+    width: 100%;
+    padding: 15px 0;
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    color: #00aaff;
+  }
+  main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+  }
+  #login-vip {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  #login-vip input[type="password"] {
+    padding: 12px;
+    font-size: 18px;
+    border: 2px solid #00aaff;
+    border-radius: 5px;
+    background: #000;
+    color: #00aaff;
+  }
+  #login-vip button {
+    margin-top: 15px;
+    padding: 12px;
+    font-size: 18px;
+    background-color: #00aaff;
+    border: none;
+    border-radius: 5px;
+    color: #000;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  #login-vip button:hover {
+    background-color: #0077aa;
+  }
+  #erro-vip {
+    margin-top: 10px;
+    color: #ff4444;
+    text-align: center;
+  }
+  footer {
+    padding: 15px 0;
+    width: 100%;
+    background-color: #001f33;
+    text-align: center;
+    color: #00aaff;
+    font-size: 14px;
+  }
+  a {
+    color: #00aaff;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 20px;
+    text-align: center;
+    display: block;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+</style>
 </head>
 <body>
-  <header>
-    <h1>Palpites Morros</h1>
-  </header>
-  <main class="login-container">
-    <h2>Login Área VIP</h2>
-    <form id="vip-login-form">
-      <input type="password" id="vip-password" placeholder="Digite a senha" required />
-      <button type="submit">Entrar</button>
-    </form>
-    <p id="vip-error" class="error-msg"></p>
-  </main>
-  <script src="js/script.js"></script>
+
+<header>Palpites Morros</header>
+
+<main>
+  <div id="login-vip">
+    <input type="password" id="senha-vip" placeholder="Senha Área VIP" />
+    <button id="btn-entrar-vip">Entrar Área VIP</button>
+    <div id="erro-vip"></div>
+  </div>
+  <a href="admin.html" target="_blank">Área Administrativa</a>
+</main>
+
+<footer>© 2025 Palpites Morros</footer>
+
+<script>
+  const senhaVip = 'Morros321';
+  const btnEntrar = document.getElementById('btn-entrar-vip');
+  const senhaInput = document.getElementById('senha-vip');
+  const erroDiv = document.getElementById('erro-vip');
+
+  btnEntrar.addEventListener('click', () => {
+    const senha = senhaInput.value.trim();
+    if(senha === senhaVip) {
+      erroDiv.textContent = '';
+      // Redireciona para área VIP
+      window.location.href = 'vip.html';
+    } else {
+      erroDiv.textContent = 'Senha incorreta. Tente novamente.';
+      senhaInput.value = '';
+      senhaInput.focus();
+    }
+  });
+</script>
+
 </body>
 </html>
