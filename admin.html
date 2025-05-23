@@ -84,7 +84,10 @@
     <!-- Painel de administração -->
     <div id="painel" class="hidden">
       <h2>Adicionar Novo Palpite</h2>
-      <textarea id="novoPalpite" rows="4" placeholder="Digite o palpite aqui..."></textarea>
+      <input type="text" id="jogo" placeholder="Jogo (ex: Napoli x Milan)">
+      <input type="text" id="vitoria" placeholder="Vitória (ex: Napoli)">
+      <input type="text" id="gols" placeholder="Gols (ex: +2.5)">
+      <input type="text" id="escanteios" placeholder="Escanteios (ex: +8.5)">
       <button onclick="adicionarPalpite()">Adicionar Palpite</button>
 
       <h2>Palpites Atuais</h2>
@@ -108,16 +111,25 @@
     }
 
     function adicionarPalpite() {
-      const palpite = document.getElementById('novoPalpite').value.trim();
-      if (palpite === "") {
-        alert('Digite um palpite!');
+      const jogo = document.getElementById('jogo').value.trim();
+      const vitoria = document.getElementById('vitoria').value.trim();
+      const gols = document.getElementById('gols').value.trim();
+      const escanteios = document.getElementById('escanteios').value.trim();
+
+      if (!jogo || !vitoria || !gols || !escanteios) {
+        alert('Preencha todos os campos!');
         return;
       }
 
       let palpites = JSON.parse(localStorage.getItem('palpites')) || [];
-      palpites.push(palpite);
+      palpites.push({ jogo, vitoria, gols, escanteios });
       localStorage.setItem('palpites', JSON.stringify(palpites));
-      document.getElementById('novoPalpite').value = '';
+
+      document.getElementById('jogo').value = '';
+      document.getElementById('vitoria').value = '';
+      document.getElementById('gols').value = '';
+      document.getElementById('escanteios').value = '';
+
       carregarPalpites();
     }
 
@@ -130,7 +142,12 @@
         const div = document.createElement('div');
         div.className = 'palpite';
         div.innerHTML = `
-          <span>${item}</span>
+          <div>
+            <strong>Jogo:</strong> ${item.jogo} <br>
+            <strong>Vitória:</strong> ${item.vitoria} <br>
+            <strong>Gols:</strong> ${item.gols} <br>
+            <strong>Escanteios:</strong> ${item.escanteios}
+          </div>
           <button class="btn-delete" onclick="removerPalpite(${index})">Excluir</button>
         `;
         lista.appendChild(div);
