@@ -1,42 +1,25 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Palpites Morros</title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Palpites Morros</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>Palpites Morros</h1>
-    </header>
 
-    <main>
-        <div id="palpites" class="cards"></div>
-    </main>
+<header>
+  <h1>Palpites Morros</h1>
+  <nav>
+    <a href="index.html">Público</a>
+    <a href="vip.html">Área VIP</a>
+    <a href="admin.html">Admin</a>
+  </nav>
+</header>
 
-    <script>
-        const timestamp = new Date().getTime(); // Para evitar cache
-        fetch(`palpites.json?v=${timestamp}`)
-            .then(res => res.json())
-            .then(data => {
-                const container = document.getElementById('palpites');
-                data.forEach(p => {
-                    const card = document.createElement('div');
-                    card.className = 'card';
-                    card.innerHTML = `
-                        <h2>${p.jogo}</h2>
-                        <p><strong>Gols:</strong> ${p.gols}</p>
-                        <p><strong>Escanteios:</strong> ${p.escanteios}</p>
-                        <p><strong>Vitória:</strong> ${p.vitoria}</p>
-                        <p class="tipo">${p.tipo === 'vip' ? '🔒 VIP' : '🌐 Público'}</p>
-                    `;
-                    container.appendChild(card);
-                });
-            })
-            .catch(() => {
-                document.getElementById('palpites').innerHTML = '<p>Não foi possível carregar os palpites.</p>';
-            });
-    </script>
+<main id="palpites"></main>
+
+<script src="script.js"></script>
+
 </body>
 </html>
