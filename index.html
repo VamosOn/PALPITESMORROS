@@ -1,98 +1,57 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Palpites Morros</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    background: black;
-    color: white;
-    padding: 10px;
-  }
-  header {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  h1 {
-    color: #00aaff;
-  }
-  .palpite-card {
-    background: #111;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 10px;
-  }
-  .vip {
-    border-left: 5px solid gold;
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palpites Morros</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .card {
+            background-color: #101020;
+            border: 1px solid #00f;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+        }
+        .card h3 {
+            margin-top: 0;
+            color: #00f;
+        }
+    </style>
 </head>
 <body>
+    <h1>Palpites Morros</h1>
+    <div id="palpites"></div>
 
-<header>
-  <h1>Palpites Morros</h1>
-</header>
-
-<h2>Palpites Públicos</h2>
-<div id="publicos"></div>
-
-<h2>Área VIP (senha para acesso)</h2>
-<input type="password" id="senhaVip" placeholder="Digite a senha VIP" />
-<button onclick="mostrarVip()">Entrar VIP</button>
-
-<div id="vip" style="display:none; margin-top:20px;"></div>
-
-<script>
-  let palpites = [];
-
-  async function carregarPalpites() {
-    try {
-      const response = await fetch('palpites.json');
-      palpites = await response.json();
-      mostrarPalpitesPublicos();
-    } catch (e) {
-      document.getElementById('publicos').innerText = 'Erro ao carregar palpites.';
-    }
-  }
-
-  function mostrarPalpitesPublicos() {
-    const container = document.getElementById('publicos');
-    container.innerHTML = '';
-    palpites.filter(p => p.tipo === 'publico').forEach(p => {
-      const div = document.createElement('div');
-      div.className = 'palpite-card';
-      div.innerHTML = `<strong>${p.jogo}</strong><br>
-        Gols: ${p.gols}<br>
-        Escanteios: ${p.escanteios}<br>
-        Vitória: ${p.vitoria}`;
-      container.appendChild(div);
-    });
-  }
-
-  function mostrarVip() {
-    const senha = document.getElementById('senhaVip').value;
-    const vipContainer = document.getElementById('vip');
-    if (senha === 'Morros321') {
-      vipContainer.style.display = 'block';
-      vipContainer.innerHTML = '';
-      palpites.filter(p => p.tipo === 'vip').forEach(p => {
-        const div = document.createElement('div');
-        div.className = 'palpite-card vip';
-        div.innerHTML = `<strong>${p.jogo}</strong><br>
-          Gols: ${p.gols}<br>
-          Escanteios: ${p.escanteios}<br>
-          Vitória: ${p.vitoria}`;
-        vipContainer.appendChild(div);
-      });
-    } else {
-      alert('Senha VIP incorreta.');
-    }
-  }
-
-  carregarPalpites();
-</script>
-
+    <script>
+        const timestamp = new Date().getTime(); // cache busting
+        fetch(`palpites.json?v=${timestamp}`)
+            .then(res => res.json())
+            .then(data => {
+                const container = document.getElementById('palpites');
+                data.forEach(palpite => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <h3>${palpite.jogo}</h3>
+                        <p><strong>Gols:</strong> ${palpite.gols}</p>
+                        <p><strong>Escanteios:</strong> ${palpite.escanteios}</p>
+                        <p><strong>Vitória:</strong> ${palpite.vitoria}</p>
+                        <p><strong>Tipo:</strong> ${palpite.tipo === 'vip' ? 'VIP 🔒' : 'Público 🌐'}</p>
+                    `;
+                    container.appendChild(card);
+                });
+            })
+            .catch(error => {
+                console.error('Erro ao carregar palpites:', error);
+                const container = document.getElementById('palpites');
+                container.innerHTML = `<p>Erro ao carregar os palpites.</p>`;
+            });
+    </script>
 </body>
 </html>
