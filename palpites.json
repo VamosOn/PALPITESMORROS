@@ -1,16 +1,16 @@
 [
   {
-    "jogo": "Betis x Valencia",
+    "jogo": "kaio x isac",
     "gols": "2-1",
     "escanteios": "8",
     "vitoria": "Betis",
     "tipo": "publico"
   },
   {
-    "jogo": "kaio",
+    "jogo": "Real Madrid x Inter M",
     "gols": "3-0",
     "escanteios": "9",
     "vitoria": "Napoli",
-    "tipo": "vip"
+    "tipo": "publico"
   }
 ]
