@@ -1,0 +1,16 @@
+[
+  {
+    "jogo": "Betis x Valencia",
+    "gols": "2-1",
+    "escanteios": "8",
+    "vitoria": "Betis",
+    "tipo": "publico"
+  },
+  {
+    "jogo": "Como x Inter",
+    "gols": "1-3",
+    "escanteios": "7",
+    "vitoria": "Inter",
+    "tipo": "vip"
+  }
+]
