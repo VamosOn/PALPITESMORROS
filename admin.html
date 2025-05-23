@@ -26,14 +26,14 @@
       max-width: 800px;
       margin: auto;
     }
-    input, textarea, button {
+    input, select, button {
       padding: 10px;
       margin: 5px;
       border-radius: 5px;
       border: none;
       font-size: 16px;
     }
-    input, textarea {
+    input, select {
       width: calc(100% - 22px);
       background-color: #111;
       color: #00aaff;
@@ -88,6 +88,10 @@
       <input type="text" id="vitoria" placeholder="Vitória (ex: Napoli)">
       <input type="text" id="gols" placeholder="Gols (ex: +2.5)">
       <input type="text" id="escanteios" placeholder="Escanteios (ex: +8.5)">
+      <select id="tipo">
+        <option value="publico">Público</option>
+        <option value="vip">VIP</option>
+      </select>
       <button onclick="adicionarPalpite()">Adicionar Palpite</button>
 
       <h2>Palpites Atuais</h2>
@@ -115,6 +119,7 @@
       const vitoria = document.getElementById('vitoria').value.trim();
       const gols = document.getElementById('gols').value.trim();
       const escanteios = document.getElementById('escanteios').value.trim();
+      const tipo = document.getElementById('tipo').value;
 
       if (!jogo || !vitoria || !gols || !escanteios) {
         alert('Preencha todos os campos!');
@@ -122,13 +127,14 @@
       }
 
       let palpites = JSON.parse(localStorage.getItem('palpites')) || [];
-      palpites.push({ jogo, vitoria, gols, escanteios });
+      palpites.push({ jogo, vitoria, gols, escanteios, tipo });
       localStorage.setItem('palpites', JSON.stringify(palpites));
 
       document.getElementById('jogo').value = '';
       document.getElementById('vitoria').value = '';
       document.getElementById('gols').value = '';
       document.getElementById('escanteios').value = '';
+      document.getElementById('tipo').value = 'publico';
 
       carregarPalpites();
     }
@@ -146,7 +152,8 @@
             <strong>Jogo:</strong> ${item.jogo} <br>
             <strong>Vitória:</strong> ${item.vitoria} <br>
             <strong>Gols:</strong> ${item.gols} <br>
-            <strong>Escanteios:</strong> ${item.escanteios}
+            <strong>Escanteios:</strong> ${item.escanteios} <br>
+            <strong>Tipo:</strong> ${item.tipo === 'vip' ? 'VIP' : 'Público'}
           </div>
           <button class="btn-delete" onclick="removerPalpite(${index})">Excluir</button>
         `;
