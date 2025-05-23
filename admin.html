@@ -1,173 +1,136 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Administração - Palpites Morros</title>
-  <style>
-    body {
-      background-color: #000;
-      color: #00aaff;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background-color: #001f3f;
-      padding: 20px;
-      text-align: center;
-    }
-    header h1 {
-      margin: 0;
-      color: #00aaff;
-    }
-    .container {
-      padding: 20px;
-      max-width: 800px;
-      margin: auto;
-    }
-    input, select, button {
-      padding: 10px;
-      margin: 5px;
-      border-radius: 5px;
-      border: none;
-      font-size: 16px;
-    }
-    input, select {
-      width: calc(100% - 22px);
-      background-color: #111;
-      color: #00aaff;
-    }
-    button {
-      background-color: #00aaff;
-      color: #000;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    button:hover {
-      background-color: #0088cc;
-    }
-    .hidden {
-      display: none;
-    }
-    .palpite {
-      background-color: #111;
-      padding: 10px;
-      border-radius: 8px;
-      margin: 10px 0;
-      color: #00d4ff;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .btn-delete {
-      background-color: red;
-      color: white;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Administrador - Palpites Morros</title>
+<style>
+body {
+  background-color: #000;
+  color: #fff;
+  font-family: Arial, sans-serif;
+}
+header {
+  background-color: #001f3f;
+  padding: 10px;
+  text-align: center;
+}
+header h1 {
+  margin: 0;
+  color: #00aaff;
+}
+.container {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+}
+input, select {
+  padding: 10px;
+  margin: 5px;
+}
+button {
+  padding: 10px 20px;
+  background-color: #00aaff;
+  border: none;
+  color: white;
+  cursor: pointer;
+  margin: 5px;
+}
+.palpite {
+  background-color: #111;
+  border: 2px solid #00aaff;
+  border-radius: 12px;
+  padding: 15px;
+  margin: 15px 0;
+  box-shadow: 0 0 10px rgba(0, 170, 255, 0.4);
+}
+</style>
 </head>
 <body>
 
-  <header>
-    <h1>Painel de Administração - Palpites Morros</h1>
-  </header>
+<header>
+  <h1>Administrador - Palpites Morros</h1>
+</header>
 
-  <div class="container">
+<div class="container" id="login">
+  <p>Digite a senha para acessar:</p>
+  <input type="password" id="senha">
+  <button onclick="entrar()">Entrar</button>
+</div>
 
-    <!-- Tela de login -->
-    <div id="login">
-      <h2>Login do Administrador</h2>
-      <input type="password" id="senha" placeholder="Digite a senha">
-      <button onclick="logar()">Entrar</button>
-    </div>
+<div class="container" id="conteudo" style="display:none;">
+  <h2>Adicionar Palpite</h2>
+  <input type="text" id="jogo" placeholder="Jogo">
+  <input type="text" id="vitoria" placeholder="Vitória">
+  <input type="text" id="gols" placeholder="Gols">
+  <input type="text" id="escanteios" placeholder="Escanteios">
+  <select id="tipo">
+    <option value="publico">Público</option>
+    <option value="vip">VIP</option>
+  </select>
+  <button onclick="adicionarPalpite()">Adicionar</button>
 
-    <!-- Painel de administração -->
-    <div id="painel" class="hidden">
-      <h2>Adicionar Novo Palpite</h2>
-      <input type="text" id="jogo" placeholder="Jogo (ex: Napoli x Milan)">
-      <input type="text" id="vitoria" placeholder="Vitória (ex: Napoli)">
-      <input type="text" id="gols" placeholder="Gols (ex: +2.5)">
-      <input type="text" id="escanteios" placeholder="Escanteios (ex: +8.5)">
-      <select id="tipo">
-        <option value="publico">Público</option>
-        <option value="vip">VIP</option>
-      </select>
-      <button onclick="adicionarPalpite()">Adicionar Palpite</button>
+  <h2>Palpites Atuais</h2>
+  <div id="lista"></div>
+</div>
 
-      <h2>Palpites Atuais</h2>
-      <div id="listaPalpites"></div>
-    </div>
+<script>
+function entrar() {
+  const senha = document.getElementById('senha').value;
+  if(senha === 'Morros123') {
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('conteudo').style.display = 'block';
+    listar();
+  } else {
+    alert('Senha incorreta!');
+  }
+}
 
-  </div>
+function adicionarPalpite() {
+  const jogo = document.getElementById('jogo').value;
+  const vitoria = document.getElementById('vitoria').value;
+  const gols = document.getElementById('gols').value;
+  const escanteios = document.getElementById('escanteios').value;
+  const tipo = document.getElementById('tipo').value;
 
-  <script>
-    const senhaCorreta = "Morros123";
+  const palpites = JSON.parse(localStorage.getItem('palpites') || '[]');
+  palpites.push({jogo, vitoria, gols, escanteios, tipo});
+  localStorage.setItem('palpites', JSON.stringify(palpites));
 
-    function logar() {
-      const senha = document.getElementById('senha').value;
-      if (senha === senhaCorreta) {
-        document.getElementById('login').classList.add('hidden');
-        document.getElementById('painel').classList.remove('hidden');
-        carregarPalpites();
-      } else {
-        alert('Senha incorreta!');
-      }
-    }
+  listar();
 
-    function adicionarPalpite() {
-      const jogo = document.getElementById('jogo').value.trim();
-      const vitoria = document.getElementById('vitoria').value.trim();
-      const gols = document.getElementById('gols').value.trim();
-      const escanteios = document.getElementById('escanteios').value.trim();
-      const tipo = document.getElementById('tipo').value;
+  document.getElementById('jogo').value = '';
+  document.getElementById('vitoria').value = '';
+  document.getElementById('gols').value = '';
+  document.getElementById('escanteios').value = '';
+}
 
-      if (!jogo || !vitoria || !gols || !escanteios) {
-        alert('Preencha todos os campos!');
-        return;
-      }
+function listar() {
+  const palpites = JSON.parse(localStorage.getItem('palpites') || '[]');
+  const lista = document.getElementById('lista');
+  lista.innerHTML = '';
+  palpites.forEach((p, index) => {
+    const div = document.createElement('div');
+    div.className = 'palpite';
+    div.innerHTML = `
+      <p><strong>Jogo:</strong> ${p.jogo}</p>
+      <p><strong>Vitória:</strong> ${p.vitoria}</p>
+      <p><strong>Gols:</strong> ${p.gols}</p>
+      <p><strong>Escanteios:</strong> ${p.escanteios}</p>
+      <p><strong>Tipo:</strong> ${p.tipo}</p>
+      <button onclick="remover(${index})">Remover</button>
+    `;
+    lista.appendChild(div);
+  });
+}
 
-      let palpites = JSON.parse(localStorage.getItem('palpites')) || [];
-      palpites.push({ jogo, vitoria, gols, escanteios, tipo });
-      localStorage.setItem('palpites', JSON.stringify(palpites));
-
-      document.getElementById('jogo').value = '';
-      document.getElementById('vitoria').value = '';
-      document.getElementById('gols').value = '';
-      document.getElementById('escanteios').value = '';
-      document.getElementById('tipo').value = 'publico';
-
-      carregarPalpites();
-    }
-
-    function carregarPalpites() {
-      const lista = document.getElementById('listaPalpites');
-      lista.innerHTML = '';
-      let palpites = JSON.parse(localStorage.getItem('palpites')) || [];
-
-      palpites.forEach((item, index) => {
-        const div = document.createElement('div');
-        div.className = 'palpite';
-        div.innerHTML = `
-          <div>
-            <strong>Jogo:</strong> ${item.jogo} <br>
-            <strong>Vitória:</strong> ${item.vitoria} <br>
-            <strong>Gols:</strong> ${item.gols} <br>
-            <strong>Escanteios:</strong> ${item.escanteios} <br>
-            <strong>Tipo:</strong> ${item.tipo === 'vip' ? 'VIP' : 'Público'}
-          </div>
-          <button class="btn-delete" onclick="removerPalpite(${index})">Excluir</button>
-        `;
-        lista.appendChild(div);
-      });
-    }
-
-    function removerPalpite(index) {
-      let palpites = JSON.parse(localStorage.getItem('palpites')) || [];
-      palpites.splice(index, 1);
-      localStorage.setItem('palpites', JSON.stringify(palpites));
-      carregarPalpites();
-    }
-  </script>
+function remover(index) {
+  const palpites = JSON.parse(localStorage.getItem('palpites') || '[]');
+  palpites.splice(index, 1);
+  localStorage.setItem('palpites', JSON.stringify(palpites));
+  listar();
+}
+</script>
 
 </body>
 </html>
